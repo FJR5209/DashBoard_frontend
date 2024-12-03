@@ -1,0 +1,26 @@
+/* src/styles/Navbar.module.css */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #333;
+    color: white;
+  }
+  
+  .navbar .logo h2 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  
+  .navbar .menu a {
+    color: white;
+    margin-left: 2rem;
+    text-decoration: none;
+  }
+  
+  .navbar .menu a:hover {
+    text-decoration: underline;
+  }
+  
