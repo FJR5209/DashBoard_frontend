@@ -75,6 +75,7 @@ export default function Home() {
       </div>
 
       <main className={homeStyles.main}>
+
         {/* Gráfico de Temperatura */}
         <div className={homeStyles.chartContainer}>
           <h2 className={homeStyles.chartTitle}>Temperatura</h2>
