@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Link from 'next/link'; // Importando o Link do Next.js
 import navbarStyles from '../styles/Navbar.module.css'; // Importando os estilos da Navbar
 
 export default function Navbar() {
@@ -15,19 +16,19 @@ export default function Navbar() {
 
       {/* Links de navegação */}
       <div className={`${navbarStyles['nav-links']} ${menuOpen ? navbarStyles.active : ''}`}>
-        <Link href="/"> {/* Página Inicial */}
+        <Link href="/">
           <a>Início</a>
         </Link>
-        <Link href="/Data"> {/* Página de Dados */}
+        <Link href="/Data">
           <a>Dados</a>
         </Link>
-        <Link href="/Alerts"> {/* Página de Alertas */}
+        <Link href="/Alerts">
           <a>Alertas</a>
         </Link>
-        <Link href="/Settings"> {/* Página de Configurações */}
+        <Link href="/Settings">
           <a>Configurações</a>
         </Link>
-        <Link href="/Profile"> {/* Página de Perfil */}
+        <Link href="/Profile">
           <a>Perfil</a>
         </Link>
       </div>
