@@ -16,16 +16,18 @@ export default function Home() {
   const [loading, setLoading] = useState(true); // Para controle de carregamento
   const [error, setError] = useState(null); // Para controle de erros
 
-  const BACKEND_URL = 'https://dashboardbackend-production-756c.up.railway.app/'; // URL do backend
+  // URL do backend
+  const BACKEND_URL = 'https://dashboardbackend-production-756c.up.railway.app/api/thingspeak';
 
   // Função para buscar os dados do backend
   const fetchData = async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/thingspeak`);
+      const response = await fetch(BACKEND_URL);
       if (!response.ok) {
         throw new Error('Erro ao buscar dados do backend');
       }
       const data = await response.json();
+
 
       // Transformando os dados do JSON recebido
       const temperatures = data.feeds.map(feed => parseFloat(feed.field1)); // Temperaturas
