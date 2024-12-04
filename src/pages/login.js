@@ -10,9 +10,9 @@ export default function Login() {
 
   const BACKEND_URL = 'https://dashboardbackend-production-756c.up.railway.app/api/auth/login'; // URL do seu backend
 
-  // Verificar se o usuário já está logado (verificando o token nos cookies)
+  // Verificar se o usuário já está logado (verificando o token no localStorage)
   useEffect(() => {
-    const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+    const token = localStorage.getItem('authToken');
     if (token) {
       router.push('/'); // Redireciona para a página principal ou dashboard se já estiver logado
     }
@@ -38,8 +38,9 @@ export default function Login() {
 
       const data = await response.json();
 
-      // Armazenando o token nos cookies
-      document.cookie = `authToken=${data.token}; path=/; secure=true; HttpOnly; SameSite=Strict`; // Armazena o token como cookie
+      // Armazenando o token no localStorage
+      localStorage.setItem('authToken', data.token); // Armazena o token no localStorage
+      console.log('Token após login:', data.token); // Verifique no console se o token foi armazenado corretamente
       router.push('/'); // Redireciona para a página principal ou dashboard após login bem-sucedido
     } catch (err) {
       setError(err.message); // Exibe a mensagem de erro

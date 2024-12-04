@@ -62,7 +62,7 @@ export default function Home() {
 
   // Verificando o token e redirecionando para a página de login se não houver token
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Obtendo o token armazenado
+    const token = localStorage.getItem('authToken'); // Obtendo o token armazenado
     if (!token) {
       router.push('/login'); // Redireciona para a página de login caso o token não exista
     } else {
