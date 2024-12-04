@@ -20,7 +20,7 @@ export default function Profile() {
           return;
         }
 
-        const response = await fetch('http://localhost:3001/api/auth/users', {
+        const response = await fetch('https://dashboardbackend-production-756c.up.railway.app/api/auth/users', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
