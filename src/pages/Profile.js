@@ -1,26 +1,91 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Navbar from '../components/Navbar';
+import styles from '../styles/Profile.module.css';
 
 export default function Profile() {
   const router = useRouter();
+  const [userData, setUserData] = useState(null);
+  const [usersList, setUsersList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Verifique se o token está no localStorage ou sessionStorage
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    
-    if (!token) {
-      // Se não houver token, redirecionar para a página de login
-      router.push('/login');
-    }
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
 
-    // Caso o token tenha expirado ou seja inválido, redirecionar para login
-    // (a verificação de expiração é feita no backend, mas aqui pode-se melhorar)
+        if (!token) {
+          router.push('/login');
+          return;
+        }
+
+        const response = await fetch('http://localhost:3001/api/auth/users', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Erro ao buscar dados: ${response.status} - ${errorText}`);
+        }
+
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+          setUsersList(data);
+        } else {
+          setUserData(data);
+        }
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [router]);
 
+  if (loading) {
+    return <p className={styles.loading}>Carregando...</p>;
+  }
+
+  if (error) {
+    return <p className={styles.error}>Erro: {error}</p>;
+  }
+
   return (
-    <div>
-      <h1>Perfil do Usuário</h1>
-      {/* Conteúdo da página de perfil */}
+    <div className={styles.container}>
+      <Navbar />
+      <main className={styles.main}>
+        <h1 className={styles.title}>Perfil do Usuário</h1>
+        {userData && (
+          <div className={styles.userInfo}>
+            <p><strong>Nome:</strong> {userData.name}</p>
+            <p><strong>Email:</strong> {userData.email}</p>
+            <p><strong>Papel:</strong> {userData.role}</p>
+          </div>
+        )}
+        {usersList.length > 0 && (
+          <div className={styles.usersList}>
+            <h2>Lista de Usuários</h2>
+            <ul>
+              {usersList.map((user) => (
+                <li key={user.id}>
+                  <span>{user.name}</span>
+                  <span>{user.email}</span>
+                  <span>({user.role})</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

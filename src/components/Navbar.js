@@ -46,15 +46,15 @@ export default function Navbar() {
         <Link href="/Profile">
           <a>Perfil</a>
         </Link>
+
+        {/* Botão de logout */}
+        <button onClick={handleLogout} className={navbarStyles.logoutButton}>Sair</button>
       </div>
 
       {/* Ícone do menu */}
       <div className={navbarStyles['menu-icon']} onClick={toggleMenu}>
         &#9776; {/* Ícone do menu hambúrguer */}
       </div>
-
-      {/* Botão de logout */}
-      <button onClick={handleLogout}>Sair</button>
     </div>
   );
 }
