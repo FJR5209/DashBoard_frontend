@@ -35,3 +35,14 @@
   color: #f1f1f1;
   margin-bottom: 10px;
 }
+.chartTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.average {
+  font-size: 14px;
+  color: #555;
+  font-weight: bold;
+}
