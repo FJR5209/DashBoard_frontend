@@ -1,72 +1,48 @@
-/* cadastro.module.css */
-
+/* Estilos gerais para a página */
 .container {
   font-family: 'Roboto', sans-serif;
   background-color: #181818; /* Cor de fundo escuro */
   color: #ffffff; /* Cor do texto em branco */
   min-height: 100vh;
+  padding: 0 20px;
+}
+
+.main {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  padding: 20px;
+  margin-top: 50px;
 }
 
-.formContainer {
-  background-color: #2c2c2c; /* Fundo mais claro para destacar o formulário */
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  width: 100%;
-  max-width: 400px;
-}
-
-.formLabel {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #f1f1f1;
-}
-
-.formInput,
-.formSelect {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #555;
-  border-radius: 4px;
-  font-size: 14px;
-  background-color: #181818;
+.title {
+  font-size: 2rem;
+  margin-bottom: 30px;
   color: #ffffff;
 }
 
-.formInput:focus,
-.formSelect:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-}
-
-.formButton {
+.chartContainer {
   width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  max-width: 800px;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #2c2c2c; /* Cor de fundo mais clara para destacar os gráficos */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.formButton:hover {
-  background-color: #0056b3;
-}
-
-.message {
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #333;
-  border-radius: 4px;
+.chartTitle {
+  font-size: 1.5rem;
   color: #f1f1f1;
-  text-align: center;
+  margin-bottom: 10px;
+}
+.chartTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.average {
+  font-size: 14px;
+  color: #555;
+  font-weight: bold;
 }

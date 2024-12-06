@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router'; // Importando o useRouter para redirecionamento
+import { useRouter } from 'next/router';
 import Head from 'next/head';
-import homeStyles from '../styles/Home.module.css'; // Importando o CSS atualizado
-import Navbar from '../components/Navbar'; // Adicionando o Navbar
+import homeStyles from '../styles/Home.module.css';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -60,14 +59,13 @@ export default function Home() {
     return (sum / data.length).toFixed(2);
   };
 
-  // Verificando o token e redirecionando para a página de login se não houver token
   useEffect(() => {
-    const token = localStorage.getItem('authToken'); // Obtendo o token armazenado
+    const token = localStorage.getItem('authToken');
     if (!token) {
-      router.push('/login'); // Redireciona para a página de login caso o token não exista
+      router.push('/login');
     } else {
-      fetchData(); // Se o token existir, busca os dados do backend
-      const interval = setInterval(fetchData, 5000); // Atualiza os dados a cada 5 segundos
+      fetchData();
+      const interval = setInterval(fetchData, 5000);
       return () => clearInterval(interval);
     }
   }, [router]);
@@ -113,7 +111,6 @@ export default function Home() {
         <Head>
           <title>Carregando...</title>
         </Head>
-        <Navbar />
         <main className={homeStyles.main}>
           <h2>Carregando dados...</h2>
         </main>
@@ -127,7 +124,6 @@ export default function Home() {
         <Head>
           <title>Erro</title>
         </Head>
-        <Navbar />
         <main className={homeStyles.main}>
           <h2>Erro ao carregar dados: {error}</h2>
         </main>
@@ -140,7 +136,6 @@ export default function Home() {
       <Head>
         <title>Painel</title>
       </Head>
-      <Navbar />
       <main className={homeStyles.main}>
         <div className={homeStyles.chartContainer}>
           <h2>

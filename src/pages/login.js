@@ -40,8 +40,13 @@ export default function Login() {
 
       // Armazenando o token no localStorage
       localStorage.setItem('authToken', data.token); // Armazena o token no localStorage
-      //console.log('Token após login:', data.token); // Verifique no console se o token foi armazenado corretamente
-      router.push('/'); // Redireciona para a página principal ou dashboard após login bem-sucedido
+
+      // Verifica o papel do usuário (role) e redireciona conforme o caso
+      if (data.role === 'admin') {
+        router.push('/indexAdmin'); // Redireciona para a página do admin
+      } else {
+        router.push('/'); // Redireciona para a página principal para usuários comuns
+      }
     } catch (err) {
       setError(err.message); // Exibe a mensagem de erro
     }
