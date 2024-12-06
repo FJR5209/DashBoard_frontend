@@ -5,9 +5,14 @@
     color: #ffffff; /* Cor do texto em branco */
     min-height: 100vh;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
   .main {
+    width: 100%;
+    max-width: 1200px; /* Mantenha a largura máxima para telas grandes */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,15 +20,16 @@
   }
   
   .title {
-    font-size: 2rem;
+    font-size: 2rem; /* Ajuste de tamanho base */
     margin-bottom: 30px;
+    text-align: center;
     color: #ffffff;
   }
   
   .userInfo,
   .usersList {
     width: 100%;
-    max-width: 800px;
+    max-width: 800px; /* Largura máxima ajustada */
     margin: 20px 0;
     padding: 20px;
     background-color: #2c2c2c; /* Cor de fundo mais clara */
@@ -41,7 +47,13 @@
   .usersList h2 {
     font-size: 1.5rem;
     margin-bottom: 20px;
+    text-align: center;
     color: #ffffff;
+  }
+  
+  .usersList ul {
+    list-style: none;
+    padding: 0;
   }
   
   .usersList li {
@@ -52,6 +64,7 @@
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 10px;
+    font-size: 0.9rem;
   }
   
   .usersList li:hover {
@@ -63,6 +76,7 @@
     font-size: 1rem;
     color: #ff4c4c; /* Vermelho para mensagens de erro */
     margin: 20px 0;
+    text-align: center;
   }
   
   .loading {
@@ -70,5 +84,65 @@
     color: #f1f1f1;
     margin: 20px 0;
     text-align: center;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 1024px) {
+    .main {
+      padding: 15px;
+    }
+    
+    .userInfo, .usersList {
+      width: 95%;
+    }
+    
+    .title {
+      font-size: 1.8rem;
+    }
+    
+    .userInfo p,
+    .usersList li {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .userInfo, .usersList {
+      width: 90%;
+      padding: 15px;
+    }
+  
+    .usersList li {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .usersList li span {
+      margin-bottom: 5px;
+    }
+  
+    .title {
+      font-size: 1.6rem;
+    }
+  
+    .userInfo p,
+    .usersList li {
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .title {
+      font-size: 1.4rem;
+    }
+  
+    .userInfo p,
+    .usersList li {
+      font-size: 0.8rem;
+    }
+  
+    .usersList li {
+      padding: 8px;
+    }
   }
   

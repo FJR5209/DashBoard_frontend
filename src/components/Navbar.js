@@ -46,6 +46,9 @@ export default function Navbar() {
         <Link href="/Profile">
           <a>Perfil</a>
         </Link>
+        <Link href="/cadastro">
+          <a>Cadastro</a>
+        </Link>
 
         {/* Botão de logout */}
         <button onClick={handleLogout} className={navbarStyles.logoutButton}>Sair</button>
