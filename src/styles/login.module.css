@@ -1,0 +1,78 @@
+/* Login.module.css */
+
+.forms-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .forms {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 30px;
+  }
+  
+  .form-wrapper {
+    animation: hideLayer 0.3s ease-out forwards;
+  }
+  
+  .form-wrapper.is-active {
+    animation: showLayer 0.3s ease-in forwards;
+  }
+  
+  /* Outros estilos para o Login, sem :global */
+  .form {
+    overflow: hidden;
+    min-width: 260px;
+    margin-top: 50px;
+    padding: 30px 25px;
+    border-radius: 5px;
+  }
+  
+  .input-block {
+    margin-bottom: 20px;
+  }
+  
+  .input-block label {
+    font-size: 14px;
+    color: #a1b4b4;
+  }
+  
+  .input-block input {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding-right: 15px;
+    padding-left: 15px;
+    font-size: 16px;
+    line-height: 40px;
+    color: #3b4465;
+    background: #eef9fe;
+    border: 1px solid #cddbef;
+    border-radius: 2px;
+  }
+  
+  .btn {
+    opacity: 0;
+    display: block;
+    min-width: 280px;
+    margin: 30px auto 10px;
+    font-size: 18px;
+    line-height: 40px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+    color: #a7e245;
+    background: #fbfdff;
+    box-shadow: inset 0 0 0 2px #a7e245;
+    transform: translateX(30%);
+  }
+  
+  .form-wrapper.is-active .form [type='submit'] {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.4s ease-in;
+  }
+  

@@ -1,148 +1,184 @@
 /* Estilos gerais para a página */
 .container {
-    font-family: 'Roboto', sans-serif;
-    background-color: #181818; /* Cor de fundo escuro */
-    color: #ffffff; /* Cor do texto em branco */
-    min-height: 100vh;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
+  font-family: 'Roboto', sans-serif;
+  background-color: #181818; /* Cor de fundo escuro */
+  color: #ffffff; /* Cor do texto em branco */
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main {
+  width: 100%;
+  max-width: 1200px; /* Mantenha a largura máxima para telas grandes */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.title {
+  font-size: 2rem; /* Ajuste de tamanho base */
+  margin-bottom: 30px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.userInfo,
+.usersList {
+  width: 100%;
+  max-width: 800px; /* Largura máxima ajustada */
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #2c2c2c; /* Cor de fundo mais clara */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.userInfo p,
+.usersList li {
+  font-size: 1rem;
+  color: #f1f1f1;
+  margin-bottom: 10px;
+}
+
+.usersList h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.usersList ul {
+  list-style: none;
+  padding: 0;
+}
+
+.usersList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1f1f1f; /* Fundo para cada item */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease; /* Suaviza a transição do hover */
+}
+
+.usersList li:hover {
+  background-color: #333333; /* Efeito hover */
+  cursor: pointer;
+}
+
+.error {
+  font-size: 1rem;
+  color: #ff4c4c; /* Vermelho para mensagens de erro */
+  margin: 20px 0;
+  text-align: center;
+}
+
+.loading {
+  font-size: 1rem;
+  color: #f1f1f1;
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
   .main {
-    width: 100%;
-    max-width: 1200px; /* Mantenha a largura máxima para telas grandes */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
+    padding: 15px;
   }
-  
-  .title {
-    font-size: 2rem; /* Ajuste de tamanho base */
-    margin-bottom: 30px;
-    text-align: center;
-    color: #ffffff;
-  }
-  
+
   .userInfo,
   .usersList {
-    width: 100%;
-    max-width: 800px; /* Largura máxima ajustada */
-    margin: 20px 0;
-    padding: 20px;
-    background-color: #2c2c2c; /* Cor de fundo mais clara */
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    width: 95%;
   }
-  
+
+  .title {
+    font-size: 1.8rem;
+  }
+
   .userInfo p,
   .usersList li {
     font-size: 1rem;
-    color: #f1f1f1;
-    margin-bottom: 10px;
   }
-  
-  .usersList h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .userInfo,
+  .usersList {
+    width: 90%;
+    padding: 15px;
   }
-  
-  .usersList ul {
-    list-style: none;
-    padding: 0;
-  }
-  
+
   .usersList li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1f1f1f; /* Fundo para cada item */
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .usersList li span {
+    margin-bottom: 5px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .userInfo p,
+  .usersList li {
     font-size: 0.9rem;
   }
-  
-  .usersList li:hover {
-    background-color: #333333; /* Efeito hover */
-    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.4rem;
   }
-  
-  .error {
-    font-size: 1rem;
-    color: #ff4c4c; /* Vermelho para mensagens de erro */
-    margin: 20px 0;
-    text-align: center;
+
+  .userInfo p,
+  .usersList li {
+    font-size: 0.8rem;
   }
-  
-  .loading {
-    font-size: 1rem;
-    color: #f1f1f1;
-    margin: 20px 0;
-    text-align: center;
+
+  .usersList li {
+    padding: 8px;
   }
-  
-  /* Responsividade */
-  @media (max-width: 1024px) {
-    .main {
-      padding: 15px;
-    }
-    
-    .userInfo, .usersList {
-      width: 95%;
-    }
-    
-    .title {
-      font-size: 1.8rem;
-    }
-    
-    .userInfo p,
-    .usersList li {
-      font-size: 1rem;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .userInfo, .usersList {
-      width: 90%;
-      padding: 15px;
-    }
-  
-    .usersList li {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .usersList li span {
-      margin-bottom: 5px;
-    }
-  
-    .title {
-      font-size: 1.6rem;
-    }
-  
-    .userInfo p,
-    .usersList li {
-      font-size: 0.9rem;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .title {
-      font-size: 1.4rem;
-    }
-  
-    .userInfo p,
-    .usersList li {
-      font-size: 0.8rem;
-    }
-  
-    .usersList li {
-      padding: 8px;
-    }
-  }
-  
+}
+
+/* Estilos dos botões */
+.actions {
+  display: inline-flex;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.editButton,
+.deleteButton {
+  padding: 5px 10px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease; /* Suaviza a transição de hover */
+}
+
+.editButton {
+  background-color: #4caf50;
+}
+
+.deleteButton {
+  background-color: #f44336;
+}
+
+.editButton:hover {
+  background-color: #45a049;
+}
+
+.deleteButton:hover {
+  background-color: #d32f2f;
+}
