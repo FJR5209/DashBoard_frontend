@@ -77,14 +77,14 @@
     const handleEditSubmit = async (e) => {
       e.preventDefault();
       if (!editingUser) return;
-
+    
       try {
         const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
         if (!token) {
           alert('Erro: Nenhum token de autenticação encontrado.');
           return;
         }
-
+    
         const response = await fetch(
           `https://dashboardbackend-production-756c.up.railway.app/api/auth/users/${editingUser._id}`,
           {
@@ -96,7 +96,7 @@
             body: JSON.stringify(editForm),
           }
         );
-
+    
         if (response.ok) {
           const updatedUser = await response.json();
           setUsersList((prev) =>
@@ -112,7 +112,7 @@
         console.error('Erro ao atualizar o usuário:', err);
         alert('Erro ao atualizar o usuário: ' + err.message);
       }
-    };
+    };    
 
     const handleDelete = async (id) => {
       if (!window.confirm('Deseja realmente excluir este usuário?')) return;

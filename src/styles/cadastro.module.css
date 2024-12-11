@@ -11,6 +11,13 @@
   padding: 20px;
 }
 
+.centerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .formContainer {
   background-color: #2c2c2c; /* Fundo mais claro para destacar o formulário */
   padding: 20px;
@@ -30,8 +37,8 @@
 .formInput,
 .formSelect {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 12px; /* Ajuste de padding para maior conforto visual */
+  margin-bottom: 20px; /* Ajuste de margem entre os campos */
   border: 1px solid #555;
   border-radius: 4px;
   font-size: 14px;
@@ -48,7 +55,7 @@
 
 .formButton {
   width: 100%;
-  padding: 10px;
+  padding: 12px; /* Ajuste de padding para o botão */
   background-color: #007bff;
   color: white;
   border: none;
@@ -67,6 +74,43 @@
   padding: 10px;
   background-color: #333;
   border-radius: 4px;
-  color: #f1f1f1;
+  color: #000000;
   text-align: center;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .formContainer {
+    padding: 15px;
+    max-width: 350px;
+  }
+
+  .formInput,
+  .formSelect {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .formButton {
+    padding: 10px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formContainer {
+    padding: 10px;
+    max-width: 300px;
+  }
+
+  .formInput,
+  .formSelect {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .formButton {
+    padding: 8px;
+    font-size: 14px;
+  }
 }

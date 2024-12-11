@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from '../styles/cadastro.module.css';
-import Navbar from '../components/Navbar'; // Importação da Navbar
+import Navbar from '../components/Navbar';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify'; // Importando o Toastify
-import 'react-toastify/dist/ReactToastify.css'; // Importando o estilo do Toastify
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Cadastro = () => {
   const [formData, setFormData] = useState({
@@ -32,11 +33,6 @@ const Cadastro = () => {
       toast.error('Token não encontrado!', {
         position: "top-right",
         autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
       return;
     }
@@ -57,11 +53,6 @@ const Cadastro = () => {
         toast.success('Usuário cadastrado com sucesso!', {
           position: "top-right",
           autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
         setFormData({
           name: '',
@@ -75,11 +66,6 @@ const Cadastro = () => {
         toast.error(`Erro: ${response.data.msg || 'Erro desconhecido'}`, {
           position: "top-right",
           autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
       }
     } catch (error) {
@@ -87,96 +73,103 @@ const Cadastro = () => {
       toast.error(`Erro ao cadastrar: ${error.message}`, {
         position: "top-right",
         autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
     }
   };
 
   return (
     <div>
-      <Navbar /> {/* Adicionando a Navbar */}
-      <div className={styles.container}>
-        <form onSubmit={handleSubmit} className={styles.formContainer}>
-          <label className={styles.formLabel} htmlFor="name">Nome:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Digite seu nome"
-            required
-            className={styles.formInput}
-          />
+      <Navbar />
+      <div className={styles.centerContainer}>
+        <form onSubmit={handleSubmit} className={`${styles.formContainer}`} style={{ animation: 'fadeIn 1s' }}>
+          <h2 className="text-center mb-4" style={{ color: '#FFFFFF' }} >Cadastro</h2>
+          <div className="form-group mb-3">
+            <label htmlFor="name">Nome:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Digite seu nome"
+              required
+            />
+          </div>
 
-          <label className={styles.formLabel} htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Digite seu email"
-            required
-            className={styles.formInput}
-          />
+          <div className="form-group mb-3">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Digite seu email"
+              required
+            />
+          </div>
 
-          <label className={styles.formLabel} htmlFor="password">Senha:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Digite sua senha"
-            required
-            className={styles.formInput}
-          />
+          <div className="form-group mb-3">
+            <label htmlFor="password">Senha:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Digite sua senha"
+              required
+            />
+          </div>
 
-          <label className={styles.formLabel} htmlFor="tempLimit">Limite de Temperatura:</label>
-          <input
-            type="number"
-            id="tempLimit"
-            name="tempLimit"
-            value={formData.tempLimit}
-            onChange={handleChange}
-            placeholder="Digite o limite de temperatura"
-            required
-            className={styles.formInput}
-          />
+          <div className="form-group mb-3">
+            <label htmlFor="tempLimit">Limite de Temperatura:</label>
+            <input
+              type="number"
+              id="tempLimit"
+              name="tempLimit"
+              value={formData.tempLimit}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Digite o limite de temperatura"
+              required
+            />
+          </div>
+          <div className="form-group mb-3">
+            <label htmlFor="humidityLimit">Limite de Umidade:</label>
+            <input
+              type="number"
+              id="humidityLimit"
+              name="humidityLimit"
+              value={formData.humidityLimit}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Digite o limite de umidade"
+              required
+            />
+          </div>
 
-          <label className={styles.formLabel} htmlFor="role">Função:</label>
-          <select
-            id="role"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            className={styles.formSelect}
-          >
-            <option value="admin">Admin</option>
-            <option value="user">Usuário</option>
-          </select>
+          <div className="form-group mb-3">
+            <label htmlFor="role">Função:</label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="form-select"
+            >
+              <option value="admin">Admin</option>
+              <option value="user">Usuário</option>
+            </select>
+          </div>
 
-          <label className={styles.formLabel} htmlFor="humidityLimit">Limite de Umidade:</label>
-          <input
-            type="number"
-            id="humidityLimit"
-            name="humidityLimit"
-            value={formData.humidityLimit}
-            onChange={handleChange}
-            placeholder="Digite o limite de umidade"
-            required
-            className={styles.formInput}
-          />
-
-          <button type="submit" className={styles.formButton}>Cadastrar</button>
+          <button type="submit" className="btn btn-primary w-100" style={{ animation: 'bounceIn 0.8s' }}>
+            Cadastrar
+          </button>
         </form>
-
-        {/* Toast Container para exibir as mensagens */}
         <ToastContainer />
       </div>
     </div>

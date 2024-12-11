@@ -33,17 +33,11 @@ export default function Navbar() {
       <div className={`${navbarStyles['nav-links']} ${menuOpen ? navbarStyles.active : ''}`}>
         <Link href="/">
           <a>Início</a>
-        </Link>
-        <Link href="/Data">
-          <a>Dados</a>
-        </Link>
+        </Link>        
         <Link href="/Alerts">
           <a>Alertas</a>
         </Link>
-        <Link href="/Settings">
-          <a>Configurações</a>
-        </Link>
-        <Link href="/Profile">
+                <Link href="/Profile  ">
           <a>Perfil</a>
         </Link>
         <Link href="/cadastro">
