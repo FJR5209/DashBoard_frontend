@@ -64,7 +64,7 @@ export default function Profile() {
     const fetchUsersList = async (token) => {
       try {
         const response = await fetch(
-          'https://dashboardbackend-production-756c.up.railway.app//api/auth/users', // Para o admin, pega todos os usuários
+          'https://dashboardbackend-production-756c.up.railway.app/api/auth/users', // Para o admin, pega todos os usuários
           {
             method: 'GET',
             headers: {
@@ -123,7 +123,7 @@ export default function Profile() {
       }
     
       const response = await fetch(
-        `https://dashboardbackend-production-756c.up.railway.app//api/auth/users/${editingUser._id}`, // Requisição PUT para o usuário específico
+        `https://dashboardbackend-production-756c.up.railway.app/api/auth/users/${editingUser._id}`, // Requisição PUT para o usuário específico
         {
           method: 'PUT',
           headers: {
@@ -157,7 +157,7 @@ export default function Profile() {
     try {
       const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
       const response = await fetch(
-        `https://dashboardbackend-production-756c.up.railway.app//api/auth/users/${id}`, // Requisição DELETE
+        `https://dashboardbackend-production-756c.up.railway.app/api/auth/users/${id}`, // Requisição DELETE
         {
           method: 'DELETE',
           headers: {

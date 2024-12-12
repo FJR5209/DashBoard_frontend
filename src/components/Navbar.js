@@ -14,14 +14,14 @@ export default function Navbar() {
     
     if (token) {
       try {
-        // Log do token para verificar se está sendo armazenado corretamente
-        console.log("Token encontrado:", token);
+        // // Log do token para verificar se está sendo armazenado corretamente
+        // console.log("Token encontrado:", token);
 
-        // Decodificando o token JWT
-        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decodificando o token (exemplo de JWT)
+        // // Decodificando o token JWT
+        // const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decodificando o token (exemplo de JWT)
         
-        // Log para verificar a estrutura do token decodificado
-        console.log("Token decodificado:", decodedToken);
+        // // Log para verificar a estrutura do token decodificado
+        // console.log("Token decodificado:", decodedToken);
 
         // Verificando se o papel é admin
         if (decodedToken.user && decodedToken.user.role === 'admin') {
