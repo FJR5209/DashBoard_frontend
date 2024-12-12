@@ -11,29 +11,19 @@ export default function Navbar() {
   useEffect(() => {
     // Verifique o papel do usuário a partir do token ou contexto de autenticação
     const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    
+
     if (token) {
       try {
-        // // Log do token para verificar se está sendo armazenado corretamente
-        // console.log("Token encontrado:", token);
-
-        // // Decodificando o token JWT
-        // const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decodificando o token (exemplo de JWT)
-        
-        // // Log para verificar a estrutura do token decodificado
-        // console.log("Token decodificado:", decodedToken);
+        // Decodificando o token JWT
+        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decodificando o token (exemplo de JWT)
 
         // Verificando se o papel é admin
         if (decodedToken.user && decodedToken.user.role === 'admin') {
           setIsAdmin(true); // Se o papel for admin, altere o estado
-        } else {
-          console.log("O papel do usuário não é admin. Papel encontrado:", decodedToken.user ? decodedToken.user.role : 'não encontrado');
         }
       } catch (error) {
         console.error('Erro ao decodificar token:', error);
       }
-    } else {
-      console.log("Token não encontrado no armazenamento.");
     }
   }, []); // Dependências vazias para rodar uma vez após a renderização
 
@@ -47,10 +37,10 @@ export default function Navbar() {
     // Remover o token do localStorage ou sessionStorage
     localStorage.removeItem('authToken');  // Se estiver usando localStorage
     sessionStorage.removeItem('authToken');  // Se estiver usando sessionStorage
-    
+
     // Se estiver usando cookies, remova o cookie de autenticação
     document.cookie = 'authToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT'; // Exemplo de remoção de cookie
-    
+
     // Redirecionar para a página de login
     router.push('/login');
   };
