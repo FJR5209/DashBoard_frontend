@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar'; // Adicionando o Navbar
-import styles from '../styles/Profile.module.css';
+import Navbar from '../components/Navbar';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Profile() {
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function Profile() {
         }
 
         const response = await fetch(
-          'https://dashboardbackend-production-756c.up.railway.app/api/auth/users/me', // Rota para obter dados do usuário logado
+          'https://dashboardbackend-production-756c.up.railway.app/api/auth/users/me',
           {
             method: 'GET',
             headers: {
@@ -48,7 +48,7 @@ export default function Profile() {
         if (isMounted) {
           setUserData(data);
           if (data.role === 'admin') {
-            fetchUsersList(token); // Se for admin, pega todos os usuários
+            fetchUsersList(token);
           }
         }
       } catch (err) {
@@ -64,7 +64,7 @@ export default function Profile() {
     const fetchUsersList = async (token) => {
       try {
         const response = await fetch(
-          'https://dashboardbackend-production-756c.up.railway.app/api/auth/users', // Para o admin, pega todos os usuários
+          'https://dashboardbackend-production-756c.up.railway.app/api/auth/users',
           {
             method: 'GET',
             headers: {
@@ -114,16 +114,16 @@ export default function Profile() {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     if (!editingUser) return;
-    
+
     try {
       const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
       if (!token) {
         alert('Erro: Nenhum token de autenticação encontrado.');
         return;
       }
-    
+
       const response = await fetch(
-        `https://dashboardbackend-production-756c.up.railway.app/api/auth/users/${editingUser._id}`, // Requisição PUT para o usuário específico
+        `https://dashboardbackend-production-756c.up.railway.app/api/auth/users/${editingUser._id}`,
         {
           method: 'PUT',
           headers: {
@@ -133,7 +133,7 @@ export default function Profile() {
           body: JSON.stringify(editForm),
         }
       );
-    
+
       if (response.ok) {
         const updatedUser = await response.json();
         setUsersList((prev) =>
@@ -157,7 +157,7 @@ export default function Profile() {
     try {
       const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
       const response = await fetch(
-        `https://dashboardbackend-production-756c.up.railway.app/api/auth/users/${id}`, // Requisição DELETE
+        `https://dashboardbackend-production-756c.up.railway.app/api/auth/users/${id}`,
         {
           method: 'DELETE',
           headers: {
@@ -184,77 +184,112 @@ export default function Profile() {
     setEditForm({ name: '', email: '', tempLimit: '', humidityLimit: '' });
   };
 
-  if (loading) return <p className={styles.loading}>Carregando...</p>;
-  if (error) return <p className={styles.error}>Erro: {error}</p>;
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>Erro: {error}</p>;
+
+  const buttonStyle = {
+    backgroundColor: '#6200ea',
+    borderColor: '#6200ea',
+    color: '#fff',
+  };
 
   return (
-    <div className={styles.container}>
-      <Navbar />
-{usersList.length > 0 ? (
-        <div className={styles.usersList}>
-        {usersList.map((user) => (
-          <div key={user._id} className={styles.userItem}>
-            <p>{user.name}</p>
-            <button onClick={() => handleEdit(user)}>Editar</button>
-            <button onClick={() => handleDelete(user._id)}>Excluir</button>
+    <div className="container-fluid bg-dark text-white py-4" style={{ minHeight: '100vh' }}>
+    <Navbar />
+    <div className="row justify-content-center">
+      <div className="col-12 col-md-10 col-lg-8">
+        <h1 className="text-center mb-4">Perfil</h1>
+        {usersList.length > 0 ? (
+          <div>
+            {usersList.map((user) => (
+              <div key={user._id} className="mb-4">
+                <p className="fw-bold fs-5">{user.name}</p>
+                <button
+                  style={buttonStyle}
+                  className="btn btn-primary btn-lg me-2"
+                  onClick={() => handleEdit(user)}
+                >
+                  Editar
+                </button>
+                <button
+                  style={buttonStyle}
+                  className="btn btn-danger btn-lg"
+                  onClick={() => handleDelete(user._id)}
+                >
+                  Excluir
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
+        ) : (
+          <div>
+            <h3>{userData.name}</h3>
+            <p>Email: {userData.email}</p>
+            <p>Limite de Temperatura: {userData.tempLimit}</p>
+            <p>Limite de Umidade: {userData.humidityLimit}</p>
+            <button
+              style={buttonStyle}
+              className="btn btn-primary btn-lg"
+              onClick={() => handleEdit(userData)}
+            >
+              Editar
+            </button>
+          </div>
+        )}
+  
+        {editingUser && (
+          <form onSubmit={handleEditSubmit} className="mt-4">
+            <div className="mb-3">
+              <label>Nome:</label>
+              <input
+                type="text"
+                name="name"
+                className="form-control"
+                value={editForm.name}
+                onChange={handleEditChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label>E-mail:</label>
+              <input
+                type="email"
+                name="email"
+                className="form-control"
+                value={editForm.email}
+                onChange={handleEditChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label>Limite de Temperatura:</label>
+              <input
+                type="number"
+                name="tempLimit"
+                className="form-control"
+                value={editForm.tempLimit}
+                onChange={handleEditChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label>Limite de Umidade:</label>
+              <input
+                type="number"
+                name="humidityLimit"
+                className="form-control"
+                value={editForm.humidityLimit}
+                onChange={handleEditChange}
+              />
+            </div>
+            <button style={buttonStyle} className="btn btn-primary btn-lg me-2">
+              Salvar
+            </button>
+            <button className="btn btn-secondary btn-lg" onClick={handleCancelEdit}>
+              Cancelar
+            </button>
+          </form>
+        )}
       </div>
-      ) : (
-        <div className={styles.profileInfo}>
-          <h3>{userData.name}</h3>
-          <p>Email: {userData.email}</p>
-          <p>Limite de Temperatura: {userData.tempLimit}</p>
-          <p>Limite de Umidade: {userData.humidityLimit}</p>
-          <button onClick={() => handleEdit(userData)}>Editar</button>
-
-        </div>
-      )}
-
-      {editingUser && (
-        <form onSubmit={handleEditSubmit} className={styles.editForm}>
-          <label>
-            Nome:
-            <input
-              type="text"
-              name="name"
-              value={editForm.name}
-              onChange={handleEditChange}
-            />
-          </label>
-          <label>
-            Email:
-            <input
-              type="email"
-              name="email"
-              value={editForm.email}
-              onChange={handleEditChange}
-            />
-          </label>
-          <label>
-            Limite de Temperatura:
-            <input
-              type="number"
-              name="tempLimit"
-              value={editForm.tempLimit}
-              onChange={handleEditChange}
-            />
-          </label>
-          <label>
-            Limite de Umidade:
-            <input
-              type="number"
-              name="humidityLimit"
-              value={editForm.humidityLimit}
-              onChange={handleEditChange}
-            />
-          </label>
-          <button type="submit">Salvar</button>
-          <button type="button" onClick={handleCancelEdit}>
-            Cancelar
-          </button>
-        </form>
-      )}
     </div>
+  </div>
+  
   );
 }

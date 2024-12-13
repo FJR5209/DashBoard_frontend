@@ -27,24 +27,27 @@ export default function Home() {
   const [error, setError] = useState(null);
   const router = useRouter(); // Inicializando o useRouter
 
-  const BACKEND_URL = 'https://dashboardbackend-production-756c.up.railway.app/api/thingspeak';
+  const BACKEND_URL = 'https://dashboardbackend-production-756c.up.railway.app/api/thingspeak'; // URL do backend
 
   // Função para buscar os dados do backend
   const fetchData = async () => {
     try {
-      const response = await fetch(BACKEND_URL);
+      const response = await fetch(BACKEND_URL + '/fetch'); // Chama a rota que coleta dados manualmente
       if (!response.ok) {
         throw new Error('Erro ao buscar dados do backend');
       }
       const data = await response.json();
-
-      const temperatures = data.feeds.map(feed => parseFloat(feed.field1));
-      const humidity = data.feeds.map(feed => parseFloat(feed.field2));
-      const timestamps = data.feeds.map(feed => new Date(feed.created_at).toLocaleString());
-
-      setTemperatureData(prevData => [...prevData, ...temperatures]);
-      setHumidityData(prevData => [...prevData, ...humidity]);
-      setLabels(prevLabels => [...prevLabels, ...timestamps]);
+  
+      console.log('Resposta da API:', data);  // Loga a resposta completa para verificar a estrutura
+  
+      if (data && data.temperature && data.humidity && data.time) {
+        // Atualiza os estados com os dados recebidos
+        setTemperatureData([data.temperature]);
+        setHumidityData([data.humidity]);
+        setLabels([data.time]);
+      } else {
+        throw new Error('Dados de temperatura, umidade ou hora não encontrados');
+      }
     } catch (err) {
       setError(err.message);
       console.error('Erro ao buscar dados:', err);
@@ -52,7 +55,7 @@ export default function Home() {
       setLoading(false);
     }
   };
-
+  
   // Função para calcular a média de um array
   const calculateAverage = (data) => {
     if (data.length === 0) return 'N/A';
@@ -75,16 +78,16 @@ export default function Home() {
   const temperatureAverage = calculateAverage(temperatureData);
   const humidityAverage = calculateAverage(humidityData);
 
-  const last10TemperatureData = temperatureData.slice(-10);
-  const last10HumidityData = humidityData.slice(-10);
-  const last10Labels = labels.slice(-10);
+  const lastTemperatureData = temperatureData.slice(-10);
+  const lastHumidityData = humidityData.slice(-10);
+  const lastLabels = labels.slice(-10);
 
   const temperatureChartData = {
-    labels: last10Labels,
+    labels: lastLabels,
     datasets: [
       {
         label: 'Temperatura (°C)',
-        data: last10TemperatureData,
+        data: lastTemperatureData,
         borderColor: 'rgba(255, 99, 132, 1)',
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         fill: true,
@@ -94,11 +97,11 @@ export default function Home() {
   };
 
   const humidityChartData = {
-    labels: last10Labels,
+    labels: lastLabels,
     datasets: [
       {
         label: 'Umidade (%)',
-        data: last10HumidityData,
+        data: lastHumidityData,
         borderColor: 'rgba(54, 162, 235, 1)',
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         fill: true,

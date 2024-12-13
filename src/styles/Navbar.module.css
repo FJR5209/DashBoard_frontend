@@ -1,15 +1,37 @@
+/* CSS para as luzes de status */
+.online {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  border-radius: 50%;
+  margin-left: 10px; /* Espaçamento entre o nome e a luz */
+}
+
+.offline {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  margin-left: 10px; /* Espaçamento entre o nome e a luz */
+}
+
+/* Outros estilos da Navbar... */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #333; /* Cor de fundo da navbar */
+  background-color: #6200ea; /* Cor de fundo da navbar */
   color: white; /* Cor do texto */
 }
 
 .navbar h1 {
   font-size: 24px;
   margin: 0;
+  display: inline-flex; /* Torna o título e a luz componentes alinhados */
+  align-items: center; /* Alinha verticalmente o texto e a luz */
 }
 
 .nav-links {

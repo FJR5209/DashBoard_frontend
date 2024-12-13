@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'; // Importando o hook useRouter do Next.js
 import Link from 'next/link';
@@ -6,6 +7,7 @@ import navbarStyles from '../styles/Navbar.module.css'; // Importando os estilos
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false); // Estado para controlar o menu
   const [isAdmin, setIsAdmin] = useState(false); // Estado para verificar se o usuário é admin
+  const [isOnline, setIsOnline] = useState(false); // Estado para verificar o status da API
   const router = useRouter(); // Hook para redirecionar após logout
 
   useEffect(() => {
@@ -21,11 +23,31 @@ export default function Navbar() {
         if (decodedToken.user && decodedToken.user.role === 'admin') {
           setIsAdmin(true); // Se o papel for admin, altere o estado
         }
-      } catch (error) {
-        console.error('Erro ao decodificar token:', error);
+      } catch {
+        console.error('Erro ao decodificar token');
       }
     }
-  }, []); // Dependências vazias para rodar uma vez após a renderização
+
+    // Função para verificar o status da API
+    const checkAPIStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/thingspeak/fetch'); // URL de verificação
+        if (response.ok) {
+          setIsOnline(true); // API funcionando corretamente
+        } else {
+          setIsOnline(false); // API fora do ar
+        }
+      } catch (error) {
+        setIsOnline(false); // Se não conseguir se conectar, assume como offline
+      }
+    };
+
+    checkAPIStatus(); // Verifica o status da API ao carregar a página
+
+    // Atualiza a cada 10 segundos (ajustável conforme necessidade)
+    const interval = setInterval(checkAPIStatus, 10000);
+    return () => clearInterval(interval); // Limpa o intervalo ao desmontar o componente
+  }, []); // Dependências vazias para rodar apenas uma vez
 
   // Função para alternar a visibilidade do menu
   const toggleMenu = () => {
@@ -47,13 +69,19 @@ export default function Navbar() {
 
   return (
     <div className={navbarStyles.navbar}>
-      <h1>Painel de Controle</h1>
+      <h1>
+        STU
+        {/* Exibe a luz verde se estiver online, vermelha se estiver offline */}
+        {isOnline ? ' Online' : ' Offline'}
+        <span className={isOnline ? navbarStyles.online : navbarStyles.offline}></span>
+      </h1>
+
 
       {/* Links de navegação */}
       <div className={`${navbarStyles['nav-links']} ${menuOpen ? navbarStyles.active : ''}`}>
         <Link href="/">
           <a>Início</a>
-        </Link>        
+        </Link>
         <Link href="/Alerts">
           <a>Alertas</a>
         </Link>

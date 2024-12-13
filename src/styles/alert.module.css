@@ -1,0 +1,121 @@
+/* Container principal */
+.container {
+    padding: 20px;
+    background: #121212; /* Fundo escuro */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    color: #fff; /* Texto branco para contraste */
+}
+
+/* Título de nome do usuário */
+.userName {
+    text-align: center;
+    font-size: 2rem;
+    color: #fff; /* Texto claro para o título */
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+}
+
+/* Container dos gráficos lado a lado */
+.chartContainer {
+    display: flex;
+    justify-content: center; /* Centraliza os gráficos no container */
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Permite que os gráficos se ajustem se o espaço for limitado */
+    align-items: center; /* Centraliza os gráficos verticalmente */
+}
+
+/* Seção de cada gráfico */
+.chartSection {
+    width: 48%; /* Ajuste para manter os gráficos lado a lado */
+    background: #1e1e1e; /* Fundo mais claro que o container, mas ainda escuro */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1); /* Sombra mais suave */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 300px; /* Definir uma largura mínima para o gráfico */
+}
+
+/* Título dos gráficos */
+.chartSection h2 {
+    text-align: center;
+    font-size: 1.25rem;
+    color: #ddd; /* Título em cinza claro */
+    margin-bottom: 15px;
+}
+
+/* Estilo para os stats (média de temperatura e umidade) */
+.chartStats {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #ccc; /* Texto em cinza claro */
+    display: flex;
+    justify-content: space-between;
+}
+
+.chartStats p {
+    margin: 5px 0;
+}
+
+/* Estilo para as mensagens de erro ou carregamento */
+.loading, .error {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #ff6347; /* Cor de alerta em vermelho */
+}
+
+/* Botões de ação */
+.clearButtonContainer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.clearButton {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.clearButton:hover {
+    background-color: #d32f2f;
+}
+
+/* Stats gerais do sistema (média, maior e menor) */
+.statsContainer {
+    background: #1e1e1e; /* Fundo escuro para os stats */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1); /* Sombra mais suave */
+}
+
+.statsContainer h3 {
+    font-size: 1.5rem;
+    color: #fff; /* Título dos stats em branco */
+    margin-bottom: 15px;
+}
+
+.statsContainer p {
+    font-size: 1rem;
+    color: #ccc; /* Texto em cinza claro */
+    margin-bottom: 10px;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .chartSection {
+        width: 100%; /* Faz os gráficos ocuparem a tela inteira em telas menores */
+    }
+
+    .chartContainer {
+        flex-direction: column;
+        align-items: center; /* Centraliza os gráficos em telas menores */
+    }
+}
