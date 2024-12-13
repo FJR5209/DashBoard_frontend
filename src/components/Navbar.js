@@ -31,7 +31,7 @@ export default function Navbar() {
     // Função para verificar o status da API
     const checkAPIStatus = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/thingspeak/fetch'); // URL de verificação
+        const response = await fetch('https://dashboardbackend-production-756c.up.railway.app/api/thingspeak/fetch'); // URL de verificação
         if (response.ok) {
           setIsOnline(true); // API funcionando corretamente
         } else {
