@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function Profile() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
-  const [usersList, setUsersList] = useState([]); // Mantendo para uso futuro
+  const [usersList, setUsersList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
@@ -49,7 +49,7 @@ export default function Profile() {
         if (isMounted) {
           setUserData(data);
           if (data.role === 'admin') {
-            fetchUsersList(token); // Chama a função para buscar a lista de usuários
+            fetchUsersList(token);
           }
         }
       } catch (err) {
@@ -79,7 +79,7 @@ export default function Profile() {
           throw new Error(`Erro ao buscar usuários: ${response.status} - ${errorText}`);
         }
         const usersData = await response.json();
-        setUsersList(usersData); // Armazena a lista de usuários para uso futuro
+        setUsersList(usersData);
       } catch (err) {
         console.error('Erro ao buscar usuários:', err);
         setError(err.message);
@@ -96,11 +96,11 @@ export default function Profile() {
   const handleEdit = (user) => {
     setEditingUser(user);
     setEditForm({
-      name: user.name,
-      email: user.email,
-      tempLimit: user.tempLimit,
-      humidityLimit: user.humidityLimit,
-      devices: user.devices ? user.devices.join(', ') : '', // Converte array para string separada por vírgulas
+      name: user.name || '',
+      email: user.email || '',
+      tempLimit: user.tempLimit || '',
+      humidityLimit: user.humidityLimit || '',
+      devices: user.devices ? user.devices.join(', ') : '',
     });
   };
 
@@ -130,7 +130,7 @@ export default function Profile() {
           },
           body: JSON.stringify({
             ...editForm,
-            devices: editForm.devices.split(',').map((d) => d.trim()), // Converte string para array
+            devices: editForm.devices.split(',').map((d) => d.trim()),
           }),
         }
       );
@@ -149,6 +149,34 @@ export default function Profile() {
     } catch (err) {
       console.error('Erro ao atualizar o usuário:', err);
       alert('Erro ao atualizar o usuário: ' + err.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Deseja realmente excluir este usuário?')) return;
+
+    try {
+      const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+      const response = await fetch(
+        `https://dashboardbackend-production-756c.up.railway.app/api/auth/users/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        setUsersList((prev) => prev.filter((user) => user._id !== id));
+        alert('Usuário excluído com sucesso!');
+      } else {
+        const errorText = await response.text();
+        alert(`Erro ao excluir usuário: ${response.status} - ${errorText}`);
+      }
+    } catch (err) {
+      console.error('Erro ao excluir o usuário:', err);
+      alert('Erro ao excluir o usuário:' + err.message);
     }
   };
 
@@ -196,13 +224,6 @@ export default function Profile() {
               ) : (
                 <p>Sem dispositivos associados.</p>
               )}
-              <button
-                style={buttonStyle}
-                className="btn btn-primary btn-lg"
-                onClick={() => handleEdit(userData)}
-              >
-                Editar
-              </button>
             </div>
           )}
 
@@ -268,13 +289,34 @@ export default function Profile() {
             </form>
           )}
 
-          {/* Adicionando a lista de usuários para admin */}
+          {/* Lista de usuários com opções de editar e excluir */}
           {userData?.role === 'admin' && usersList.length > 0 && (
             <div>
               <h3 className="mt-5">Lista de Usuários:</h3>
-              <ul>
+              <ul className="list-group">
                 {usersList.map((user) => (
-                  <li key={user._id}>{user.name} - {user.email}</li>
+                  <li key={user._id} className="list-group-item bg-dark text-white">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <span>
+                        {user.name} - {user.email}
+                      </span>
+                      <div>
+                        <button
+                          style={buttonStyle}
+                          className="btn btn-primary btn-sm me-2"
+                          onClick={() => handleEdit(user)}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleDelete(user._id)}
+                        >
+                          Excluir
+                        </button>
+                      </div>
+                    </div>
+                  </li>
                 ))}
               </ul>
             </div>
