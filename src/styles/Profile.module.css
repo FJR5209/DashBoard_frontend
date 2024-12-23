@@ -1,34 +1,43 @@
-.btn.custom-btn, .btn.custom-btn:hover {
+/* Botão personalizado primário */
+.custom-btn {
   background-color: #6200ea !important;
   border-color: #6200ea !important;
   color: white !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.btn.custom-btn:hover, .btn.custom-btn:focus {
+.custom-btn:hover,
+.custom-btn:focus {
   background-color: #3700b3 !important;
   border-color: #3700b3 !important;
   color: white !important;
 }
 
-.btn.custom-btn-danger, .btn.custom-btn-danger:hover {
+/* Botão personalizado de perigo */
+.custom-btn-danger {
   background-color: #f44336 !important;
   border-color: #f44336 !important;
   color: white !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.btn.custom-btn-danger:hover, .btn.custom-btn-danger:focus {
+.custom-btn-danger:hover,
+.custom-btn-danger:focus {
   background-color: #d32f2f !important;
   border-color: #d32f2f !important;
   color: white !important;
 }
 
-.btn.custom-btn-success, .btn.custom-btn-success:hover {
+/* Botão personalizado de sucesso */
+.custom-btn-success {
   background-color: #4caf50 !important;
   border-color: #4caf50 !important;
   color: white !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.btn.custom-btn-success:hover, .btn.custom-btn-success:focus {
+.custom-btn-success:hover,
+.custom-btn-success:focus {
   background-color: #388e3c !important;
   border-color: #388e3c !important;
   color: white !important;

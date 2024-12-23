@@ -14,7 +14,9 @@ const Cadastro = () => {
     tempLimit: '',
     role: 'user',
     humidityLimit: '',
+    deviceId: ''
   });
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -151,6 +153,21 @@ const Cadastro = () => {
               required
             />
           </div>
+
+          <div className="form-group mb-3">
+            <label htmlFor="deviceId">Dispositivo:</label>
+            <input
+              type="text"
+              id="deviceId"
+              name="deviceId"
+              value={formData.deviceId}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Digite o número do dispositivo"
+              required
+            />
+          </div>
+
 
           <div className="form-group mb-3">
             <label htmlFor="role">Função:</label>

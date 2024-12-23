@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function Profile() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
-  const [usersList, setUsersList] = useState([]);
+  const [usersList, setUsersList] = useState([]); // Mantendo para uso futuro
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
@@ -15,6 +15,7 @@ export default function Profile() {
     email: '',
     tempLimit: '',
     humidityLimit: '',
+    devices: '',
   });
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function Profile() {
         if (isMounted) {
           setUserData(data);
           if (data.role === 'admin') {
-            fetchUsersList(token);
+            fetchUsersList(token); // Chama a função para buscar a lista de usuários
           }
         }
       } catch (err) {
@@ -78,14 +79,10 @@ export default function Profile() {
           throw new Error(`Erro ao buscar usuários: ${response.status} - ${errorText}`);
         }
         const usersData = await response.json();
-        if (isMounted) {
-          setUsersList(usersData);
-        }
+        setUsersList(usersData); // Armazena a lista de usuários para uso futuro
       } catch (err) {
-        if (isMounted) {
-          console.error('Erro ao buscar usuários:', err);
-          setError(err.message);
-        }
+        console.error('Erro ao buscar usuários:', err);
+        setError(err.message);
       }
     };
 
@@ -103,6 +100,7 @@ export default function Profile() {
       email: user.email,
       tempLimit: user.tempLimit,
       humidityLimit: user.humidityLimit,
+      devices: user.devices ? user.devices.join(', ') : '', // Converte array para string separada por vírgulas
     });
   };
 
@@ -130,14 +128,17 @@ export default function Profile() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(editForm),
+          body: JSON.stringify({
+            ...editForm,
+            devices: editForm.devices.split(',').map((d) => d.trim()), // Converte string para array
+          }),
         }
       );
 
       if (response.ok) {
         const updatedUser = await response.json();
         setUsersList((prev) =>
-          prev.map((user) => (user._id === updatedUser._id ? updatedUser : user))
+          prev.map((user) => (user._id === updatedUser.updatedData._id ? updatedUser.updatedData : user))
         );
         alert('Usuário atualizado com sucesso!');
         setEditingUser(null);
@@ -151,37 +152,15 @@ export default function Profile() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Deseja realmente excluir este usuário?')) return;
-
-    try {
-      const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-      const response = await fetch(
-        `https://dashboardbackend-production-756c.up.railway.app/api/auth/users/${id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        setUsersList((prev) => prev.filter((user) => user._id !== id));
-        alert('Usuário excluído com sucesso!');
-      } else {
-        const errorText = await response.text();
-        alert(`Erro ao excluir usuário: ${response.status} - ${errorText}`);
-      }
-    } catch (err) {
-      console.error('Erro ao excluir o usuário:', err);
-      alert('Erro ao excluir o usuário:' + err.message);
-    }
-  };
-
   const handleCancelEdit = () => {
     setEditingUser(null);
-    setEditForm({ name: '', email: '', tempLimit: '', humidityLimit: '' });
+    setEditForm({
+      name: '',
+      email: '',
+      tempLimit: '',
+      humidityLimit: '',
+      devices: '',
+    });
   };
 
   if (loading) return <p>Carregando...</p>;
@@ -195,101 +174,113 @@ export default function Profile() {
 
   return (
     <div className="container-fluid bg-dark text-white py-4" style={{ minHeight: '100vh' }}>
-    <Navbar />
-    <div className="row justify-content-center">
-      <div className="col-12 col-md-10 col-lg-8">
-        <h1 className="text-center mb-4">Perfil</h1>
-        {usersList.length > 0 ? (
-          <div>
-            {usersList.map((user) => (
-              <div key={user._id} className="mb-4">
-                <p className="fw-bold fs-5">{user.name}</p>
-                <button
-                  style={buttonStyle}
-                  className="btn btn-primary btn-lg me-2"
-                  onClick={() => handleEdit(user)}
-                >
-                  Editar
-                </button>
-                <button
-                  style={buttonStyle}
-                  className="btn btn-danger btn-lg"
-                  onClick={() => handleDelete(user._id)}
-                >
-                  Excluir
-                </button>
+      <Navbar />
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-10 col-lg-8">
+          <h1 className="text-center mb-4">Perfil</h1>
+          {userData && (
+            <div>
+              <h3>{userData.name}</h3>
+              <p>Email: {userData.email}</p>
+              <p>Limite de Temperatura: {userData.tempLimit}</p>
+              <p>Limite de Umidade: {userData.humidityLimit}</p>
+              {Array.isArray(userData.devices) && userData.devices.length > 0 ? (
+                <div>
+                  <h5>Dispositivos:</h5>
+                  <ul>
+                    {userData.devices.map((device, index) => (
+                      <li key={index}>{device}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p>Sem dispositivos associados.</p>
+              )}
+              <button
+                style={buttonStyle}
+                className="btn btn-primary btn-lg"
+                onClick={() => handleEdit(userData)}
+              >
+                Editar
+              </button>
+            </div>
+          )}
+
+          {editingUser && (
+            <form onSubmit={handleEditSubmit} className="mt-4">
+              <div className="mb-3">
+                <label>Nome:</label>
+                <input
+                  type="text"
+                  name="name"
+                  className="form-control"
+                  value={editForm.name}
+                  onChange={handleEditChange}
+                />
               </div>
-            ))}
-          </div>
-        ) : (
-          <div>
-            <h3>{userData.name}</h3>
-            <p>Email: {userData.email}</p>
-            <p>Limite de Temperatura: {userData.tempLimit}</p>
-            <p>Limite de Umidade: {userData.humidityLimit}</p>
-            <button
-              style={buttonStyle}
-              className="btn btn-primary btn-lg"
-              onClick={() => handleEdit(userData)}
-            >
-              Editar
-            </button>
-          </div>
-        )}
-  
-        {editingUser && (
-          <form onSubmit={handleEditSubmit} className="mt-4">
-            <div className="mb-3">
-              <label>Nome:</label>
-              <input
-                type="text"
-                name="name"
-                className="form-control"
-                value={editForm.name}
-                onChange={handleEditChange}
-              />
+              <div className="mb-3">
+                <label>E-mail:</label>
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  value={editForm.email}
+                  onChange={handleEditChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label>Limite de Temperatura:</label>
+                <input
+                  type="number"
+                  name="tempLimit"
+                  className="form-control"
+                  value={editForm.tempLimit}
+                  onChange={handleEditChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label>Limite de Umidade:</label>
+                <input
+                  type="number"
+                  name="humidityLimit"
+                  className="form-control"
+                  value={editForm.humidityLimit}
+                  onChange={handleEditChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label>Dispositivos:</label>
+                <textarea
+                  name="devices"
+                  className="form-control"
+                  value={editForm.devices}
+                  onChange={handleEditChange}
+                  rows="3"
+                  placeholder="Insira os dispositivos separados por vírgulas"
+                ></textarea>
+              </div>
+              <button style={buttonStyle} className="btn btn-primary btn-lg me-2">
+                Salvar
+              </button>
+              <button className="btn btn-secondary btn-lg" onClick={handleCancelEdit}>
+                Cancelar
+              </button>
+            </form>
+          )}
+
+          {/* Adicionando a lista de usuários para admin */}
+          {userData?.role === 'admin' && usersList.length > 0 && (
+            <div>
+              <h3 className="mt-5">Lista de Usuários:</h3>
+              <ul>
+                {usersList.map((user) => (
+                  <li key={user._id}>{user.name} - {user.email}</li>
+                ))}
+              </ul>
             </div>
-            <div className="mb-3">
-              <label>E-mail:</label>
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                value={editForm.email}
-                onChange={handleEditChange}
-              />
-            </div>
-            <div className="mb-3">
-              <label>Limite de Temperatura:</label>
-              <input
-                type="number"
-                name="tempLimit"
-                className="form-control"
-                value={editForm.tempLimit}
-                onChange={handleEditChange}
-              />
-            </div>
-            <div className="mb-3">
-              <label>Limite de Umidade:</label>
-              <input
-                type="number"
-                name="humidityLimit"
-                className="form-control"
-                value={editForm.humidityLimit}
-                onChange={handleEditChange}
-              />
-            </div>
-            <button style={buttonStyle} className="btn btn-primary btn-lg me-2">
-              Salvar
-            </button>
-            <button className="btn btn-secondary btn-lg" onClick={handleCancelEdit}>
-              Cancelar
-            </button>
-          </form>
-        )}
+          )}
+        </div>
       </div>
     </div>
-  </div>
-  
   );
 }

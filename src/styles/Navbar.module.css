@@ -1,52 +1,46 @@
-/* CSS para as luzes de status */
-.online {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  background-color: green;
-  border-radius: 50%;
-  margin-left: 10px; /* Espaçamento entre o nome e a luz */
-}
-
-.offline {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  background-color: red;
-  border-radius: 50%;
-  margin-left: 10px; /* Espaçamento entre o nome e a luz */
-}
-
-/* Outros estilos da Navbar... */
+/* Estilos principais da Navbar */
 .navbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #6200ea; /* Cor de fundo da navbar */
+  justify-content: space-between; /* Espaça o título e os links */
+  align-items: center; /* Alinha verticalmente */
+  padding: 10px 20px; /* Espaçamento interno */
+  background-color: #6200ea; /* Cor de fundo */
   color: white; /* Cor do texto */
+  position: sticky; /* Fixa a Navbar no topo */
+  top: 0; /* Posição superior */
+  z-index: 1000; /* Garante que fique acima do conteúdo */
+  width: 100%; /* Ocupa toda a largura */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra */
 }
 
+/* Estilo do título */
 .navbar h1 {
   font-size: 24px;
   margin: 0;
-  display: inline-flex; /* Torna o título e a luz componentes alinhados */
-  align-items: center; /* Alinha verticalmente o texto e a luz */
+  white-space: nowrap; /* Evita quebra de linha */
 }
 
+/* Links de navegação */
 .nav-links {
   display: flex;
   gap: 20px; /* Espaçamento entre os links */
-  align-items: center; /* Alinhamento vertical */
+  align-items: center; /* Centraliza verticalmente */
+  transition: all 0.3s ease-in-out; /* Animação suave */
 }
 
 .nav-links a {
   text-decoration: none;
   color: white;
   font-size: 18px;
+  transition: color 0.3s ease-in-out; /* Suaviza mudanças de cor */
 }
 
-.nav-links button {
+.nav-links a:hover {
+  color: #ddd; /* Destaque ao passar o mouse */
+}
+
+/* Botão de logout */
+.logoutButton {
   background-color: #f00;
   color: white;
   padding: 8px 16px;
@@ -54,33 +48,41 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.3s ease-in-out;
 }
 
-.nav-links button:hover {
-  background-color: #c00;
+.logoutButton:hover {
+  background-color: #c00; /* Cor mais escura ao passar o mouse */
 }
 
+/* Ícone do menu hambúrguer */
 .menu-icon {
-  display: none; /* Esconde o ícone do menu para telas grandes */
+  display: none; /* Esconde o ícone em telas grandes */
   font-size: 30px;
   cursor: pointer;
+  color: white;
 }
 
+/* Estilos para telas menores */
 @media (max-width: 768px) {
   .nav-links {
-    display: none; /* Esconde os links em telas pequenas */
-    width: 100%;
-    flex-direction: column;
-    gap: 10px;
-    padding: 20px;
-    background-color: #333; /* Cor de fundo do menu em telas pequenas */
+    display: none; /* Esconde os links por padrão */
+    position: absolute;
+    top: 60px; /* Posição do menu abaixo da navbar */
+    left: 0;
+    width: 100%; /* Ocupa toda a largura */
+    flex-direction: column; /* Organiza os links verticalmente */
+    background-color: #333; /* Fundo escuro para o menu */
+    padding: 10px 0;
+    gap: 10px; /* Espaçamento entre os links */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra */
   }
 
   .nav-links.active {
-    display: flex; /* Exibe o menu quando estiver ativo */
+    display: flex; /* Exibe o menu quando ativo */
   }
 
   .menu-icon {
-    display: block; /* Exibe o ícone de menu em telas pequenas */
+    display: block; /* Exibe o ícone do menu */
   }
 }
