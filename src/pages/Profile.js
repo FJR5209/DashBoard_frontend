@@ -74,10 +74,12 @@ export default function Profile() {
             },
           }
         );
+
         if (!response.ok) {
           const errorText = await response.text();
           throw new Error(`Erro ao buscar usuários: ${response.status} - ${errorText}`);
         }
+
         const usersData = await response.json();
         setUsersList(usersData);
       } catch (err) {
@@ -191,6 +193,49 @@ export default function Profile() {
     });
   };
 
+  const handleAddData = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+      if (!token) {
+        alert('Erro: Nenhum token de autenticação encontrado.');
+        return;
+      }
+
+      const response = await fetch(
+        `https://dashboardbackend-production-756c.up.railway.app/api/auth/users/me`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            tempLimit: editForm.tempLimit || userData.tempLimit,
+            humidityLimit: editForm.humidityLimit || userData.humidityLimit,
+            devices: [
+              ...(userData.devices || []),
+              ...editForm.devices.split(',').map((d) => d.trim()),
+            ],
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const updatedData = await response.json();
+        setUserData(updatedData.updatedData);
+        alert('Dados adicionados com sucesso!');
+      } else {
+        const errorData = await response.json();
+        alert(`Erro ao adicionar dados: ${errorData.msg || 'Erro desconhecido'}`);
+      }
+    } catch (err) {
+      console.error('Erro ao adicionar dados:', err);
+      alert('Erro ao adicionar dados: ' + err.message);
+    }
+  };
+
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>Erro: {error}</p>;
 
@@ -223,104 +268,125 @@ export default function Profile() {
                 </div>
               ) : (
                 <p>Sem dispositivos associados.</p>
+
               )}
+              <button
+                className="btn btn-primary"
+                style={buttonStyle}
+                onClick={() => handleEdit(userData)}
+              >
+                Editar
+              </button>
             </div>
           )}
 
           {editingUser && (
-            <form onSubmit={handleEditSubmit} className="mt-4">
-              <div className="mb-3">
-                <label>Nome:</label>
-                <input
-                  type="text"
-                  name="name"
-                  className="form-control"
-                  value={editForm.name}
-                  onChange={handleEditChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label>E-mail:</label>
-                <input
-                  type="email"
-                  name="email"
-                  className="form-control"
-                  value={editForm.email}
-                  onChange={handleEditChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label>Limite de Temperatura:</label>
-                <input
-                  type="number"
-                  name="tempLimit"
-                  className="form-control"
-                  value={editForm.tempLimit}
-                  onChange={handleEditChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label>Limite de Umidade:</label>
-                <input
-                  type="number"
-                  name="humidityLimit"
-                  className="form-control"
-                  value={editForm.humidityLimit}
-                  onChange={handleEditChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label>Dispositivos:</label>
-                <textarea
-                  name="devices"
-                  className="form-control"
-                  value={editForm.devices}
-                  onChange={handleEditChange}
-                  rows="3"
-                  placeholder="Insira os dispositivos separados por vírgulas"
-                ></textarea>
-              </div>
-              <button style={buttonStyle} className="btn btn-primary btn-lg me-2">
-                Salvar
-              </button>
-              <button className="btn btn-secondary btn-lg" onClick={handleCancelEdit}>
-                Cancelar
-              </button>
-            </form>
+            <div className="mt-4">
+              <h3>Editar Usuário</h3>
+              <form onSubmit={handleEditSubmit}>
+                <div className="form-group">
+                  <label>Nome</label>
+                  <input
+                    type="text"
+                    name="name"
+                    className="form-control"
+                    value={editForm.name}
+                    onChange={handleEditChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    value={editForm.email}
+                    onChange={handleEditChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Limite de Temperatura</label>
+                  <input
+                    type="number"
+                    name="tempLimit"
+                    className="form-control"
+                    value={editForm.tempLimit}
+                    onChange={handleEditChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Limite de Umidade</label>
+                  <input
+                    type="number"
+                    name="humidityLimit"
+                    className="form-control"
+                    value={editForm.humidityLimit}
+                    onChange={handleEditChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Dispositivos</label>
+                  <input
+                    type="text"
+                    name="devices"
+                    className="form-control"
+                    value={editForm.devices}
+                    onChange={handleEditChange}
+                  />
+                  <small className="form-text text-muted">Separe os dispositivos por vírgula.</small>
+                </div>
+                <button type="submit" className="btn btn-success" style={buttonStyle}>
+                  Atualizar
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary ml-2"
+                  onClick={handleCancelEdit}
+                >
+                  Cancelar
+                </button>
+              </form>
+            </div>
           )}
 
-          {/* Lista de usuários com opções de editar e excluir */}
-          {userData?.role === 'admin' && usersList.length > 0 && (
-            <div>
-              <h3 className="mt-5">Lista de Usuários:</h3>
-              <ul className="list-group">
-                {usersList.map((user) => (
-                  <li key={user._id} className="list-group-item bg-dark text-white">
-                    <div className="d-flex justify-content-between align-items-center">
-                      <span>
-                        {user.name} - {user.email}
-                      </span>
-                      <div>
+          {userData && userData.role === 'admin' && (
+            <div className="mt-4">
+              <h3>Lista de Usuários</h3>
+              <table className="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {usersList.map((user) => (
+                    <tr key={user._id}>
+                      <td>{user.name}</td>
+                      <td>{user.email}</td>
+                      <td>
                         <button
-                          style={buttonStyle}
-                          className="btn btn-primary btn-sm me-2"
+                          className="btn btn-warning"
                           onClick={() => handleEdit(user)}
                         >
                           Editar
                         </button>
                         <button
-                          className="btn btn-danger btn-sm"
+                          className="btn btn-danger ml-2"
                           onClick={() => handleDelete(user._id)}
                         >
                           Excluir
                         </button>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
+
+          
         </div>
       </div>
     </div>
