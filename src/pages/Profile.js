@@ -192,7 +192,7 @@ export default function Profile() {
       devices: '',
     });
   };
-
+<button onClick={handleAddData}>Adicionar Dados</button>
   const handleAddData = async (e) => {
     e.preventDefault();
 
