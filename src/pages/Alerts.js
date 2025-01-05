@@ -109,13 +109,13 @@ export default function Alerts() {
     const sendAlert = async (userId, temperature, humidity) => {
       console.log(`UserId: ${userId}, Temperatura: ${temperature}, Umidade: ${humidity}`);
       try {
-        const response = await fetch('http://localhost:3001/api/alerts', { // Substitua pela URL correta
+        const response = await fetch('https://dashboardbackend-production-756c.up.railway.app/api/alerts', { 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userId: userId, // Garantindo que o userId seja incluído
+            userId: userId, 
             temperatura: temperature,
             umidade: humidity,
           }),
