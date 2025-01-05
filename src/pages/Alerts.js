@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import homeStyles from '../styles/alert.module.css';
@@ -29,19 +27,20 @@ export default function Alerts() {
   const [minTemp, setMinTemp] = useState(null);
   const [maxHumidity, setMaxHumidity] = useState(null);
   const [minHumidity, setMinHumidity] = useState(null);
-  const [deviceId, setDeviceId] = useState(null); // Estado para armazenar o dispositivo
+  const [deviceId, setDeviceId] = useState(null);
+  const [alertCount, setAlertCount] = useState(0);
+  const [isCooldown, setIsCooldown] = useState(false);
+  const ALERT_LIMIT = 5;
+  const COOLDOWN_TIME = 10 * 60 * 1000; // 10 minutos
 
   useEffect(() => {
     const fetchDeviceAndAlerts = async () => {
       try {
         const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-        if (!token) {
-          throw new Error('Token de autenticação não encontrado');
-        }
-
-        // Buscar o dispositivo do usuário logado
+        if (!token) throw new Error('Token de autenticação não encontrado');
+    
         const userResponse = await fetch(
-          'https://dashboardbackend-production-756c.up.railway.app/api/auth/users/me', // Ajuste para o endpoint local
+          'https://dashboardbackend-production-756c.up.railway.app/api/auth/users/me',
           {
             method: 'GET',
             headers: {
@@ -50,103 +49,127 @@ export default function Alerts() {
             },
           }
         );
-
-        if (!userResponse.ok) {
-          throw new Error('Erro ao buscar informações do usuário');
-        }
-
+    
+        if (!userResponse.ok) throw new Error('Erro ao buscar informações do usuário');
+    
         const userData = await userResponse.json();
-        console.log('Dados do usuário logado:', userData); // Log para verificar o retorno
-
-        // Verificar se o campo `devices` existe e contém ao menos um valor
+        console.log('UserData:', userData); // Verificando os dados do usuário
+    
+        // Corrigindo para usar _id ao invés de id
+        const userId = userData._id; // Usando _id em vez de id
+        console.log('UserId:', userId); // Verificando se o userId foi encontrado
+    
         if (!Array.isArray(userData.devices) || userData.devices.length === 0) {
           throw new Error('Nenhum dispositivo associado ao usuário');
         }
-
-        // Pega o primeiro dispositivo do array
+    
         const userDeviceId = userData.devices[0];
         setDeviceId(userDeviceId);
-
-        // Buscar alertas do dispositivo
-        await fetchAlerts(userDeviceId);
+    
+        // Passando userId para a função de alerta
+        await fetchAlerts(userDeviceId, userId);
       } catch (error) {
         setError('Erro ao carregar os dados: ' + error.message);
       } finally {
         setLoading(false);
       }
     };
-
-    const fetchAlerts = async (device) => {
+    
+    
+    const fetchAlerts = async (device, userId) => {
+      console.log(`Buscando alertas para o Device: ${device}, UserId: ${userId}`);
       try {
         const response = await fetch(
-          `https://dashboardbackend-production-756c.up.railway.app/api/devices/${device}/latest` // Substitui dinamicamente o dispositivo
+          `https://dashboardbackend-production-756c.up.railway.app/api/devices/${device}/latest`
         );
-
-        if (!response.ok) {
-          throw new Error('Erro ao carregar os dados do dispositivo');
-        }
-
+    
+        if (!response.ok) throw new Error('Erro ao carregar os dados do dispositivo');
+    
         const data = await response.json();
-
-        // Extraindo dados
+    
         const temperature = parseFloat(data.temperatura);
         const humidity = parseFloat(data.umidade);
-        const rawTime = new Date(data.timeCollected);
-
-        // Ajustando para o fuso horário do Acre (UTC-5)
-        const adjustedTime = new Date(rawTime.getTime() - 5 * 60 * 60 * 1000);
-
-        const options = {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        };
-
-        const formattedTime = adjustedTime.toLocaleTimeString('en-US', options) + 'h';
-
-        // Atualizando os dados, limitando a 8 registros
-        setTemperatureData((prev) => {
-          const updatedData = [...prev, temperature];
-          return updatedData.length > 8 ? updatedData.slice(1) : updatedData;
-        });
-
-        setHumidityData((prev) => {
-          const updatedData = [...prev, humidity];
-          return updatedData.length > 8 ? updatedData.slice(1) : updatedData;
-        });
-
-        setLabels((prev) => {
-          const updatedLabels = [...prev, formattedTime];
-          return updatedLabels.length > 8 ? updatedLabels.slice(1) : updatedLabels;
-        });
-
-        // Recalculando as estatísticas
-        const newTemperatures = [...temperatureData, temperature].slice(-8);
-        const newHumidity = [...humidityData, humidity].slice(-8);
-
-        setMaxTemp(Math.max(...newTemperatures));
-        setMinTemp(Math.min(...newTemperatures));
-        setMaxHumidity(Math.max(...newHumidity));
-        setMinHumidity(Math.min(...newHumidity));
+    
+        if (!isCooldown && alertCount < ALERT_LIMIT) {
+          await sendAlert(userId, temperature, humidity); // Enviando o userId aqui
+        } else if (alertCount >= ALERT_LIMIT) {
+          setIsCooldown(true);
+          setTimeout(() => {
+            setAlertCount(0);
+            setIsCooldown(false);
+          }, COOLDOWN_TIME);
+        }
+    
+        updateCharts(data);
       } catch (error) {
         setError('Erro ao carregar os dados do dispositivo: ' + error.message);
       }
     };
+    
+    const sendAlert = async (userId, temperature, humidity) => {
+      console.log(`UserId: ${userId}, Temperatura: ${temperature}, Umidade: ${humidity}`);
+      try {
+        const response = await fetch('http://localhost:3001/api/alerts', { // Substitua pela URL correta
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: userId, // Garantindo que o userId seja incluído
+            temperatura: temperature,
+            umidade: humidity,
+          }),
+        });
+    
+        if (response.ok) {
+          setAlertCount((prevCount) => Math.min(prevCount + 1, ALERT_LIMIT));
+        } else {
+          console.error('Erro ao enviar alerta');
+        }
+      } catch (error) {
+        console.error('Erro ao enviar alerta: ', error.message);
+      }
+    };
+    
+    
+    
+    const updateCharts = (data) => {
+      const temperature = parseFloat(data.temperatura);
+      const humidity = parseFloat(data.umidade);
+      const rawTime = new Date(data.timeCollected);
+      const adjustedTime = new Date(rawTime.getTime() - 5 * 60 * 60 * 1000);
+      const formattedTime =
+        adjustedTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) + 'h';
+
+      setTemperatureData((prev) => {
+        const updatedData = [...prev, temperature];
+        return updatedData.length > 8 ? updatedData.slice(1) : updatedData;
+      });
+
+      setHumidityData((prev) => {
+        const updatedData = [...prev, humidity];
+        return updatedData.length > 8 ? updatedData.slice(1) : updatedData;
+      });
+
+      setLabels((prev) => {
+        const updatedLabels = [...prev, formattedTime];
+        return updatedLabels.length > 8 ? updatedLabels.slice(1) : updatedLabels;
+      });
+
+      setMaxTemp((prev) => (temperature > prev ? temperature : prev));
+      setMinTemp((prev) => (temperature < prev ? temperature : prev));
+      setMaxHumidity((prev) => (humidity > prev ? humidity : prev));
+      setMinHumidity((prev) => (humidity < prev ? humidity : prev));
+    };
 
     fetchDeviceAndAlerts();
 
-    // Atualização periódica a cada 60 segundos
     const interval = setInterval(() => {
-      if (deviceId) {
-        fetchAlerts(deviceId);
-      }
+      if (deviceId) fetchAlerts(deviceId);
     }, 30000);
 
-    // Limpa o intervalo ao desmontar o componente
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deviceId]); // Adiciona o comentário para ignorar a regra
-
+  }, [deviceId, alertCount, isCooldown]);
 
   const handleClearData = () => {
     setTemperatureData([]);

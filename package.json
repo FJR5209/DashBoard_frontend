@@ -20,7 +20,8 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-toastify": "^10.0.6",
-    "recharts": "^2.14.1"
+    "recharts": "^2.14.1",
+    "sweetalert2": "^11.15.10"
   },
   "devDependencies": {
     "@types/node": "^20",
