@@ -1,4 +1,13 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+}
 /* Login.module.css */
+.container{
+  background: linear-gradient(to bottom, #87CEEB, #f0f8ff);
+}
+
 
 .forms-section {
     display: flex;

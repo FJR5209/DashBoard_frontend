@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Mail, Lock } from 'lucide-react';
 import styles from '/styles/Login.module.css';
 import { useRouter } from 'next/router';
 
@@ -57,19 +58,25 @@ export default function Login() {
       <form className={styles.form} onSubmit={handleLogin}>
         <h1 className={styles.title}>Login</h1>
         {error && <p className={styles.error}>{error}</p>}
+
         <div className={styles.inputGroup}>
-          <label>Email</label>
+          <Mail className={styles.icon} />
+          {/* <label>Email</label> */}
           <input
             type="email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
+
         <div className={styles.inputGroup}>
-          <label>Senha</label>
+          <Lock className={styles.icon} />
+          {/* <label>Senha</label> */}
           <input
             type="password"
+            placeholder="Senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
